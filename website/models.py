@@ -5,3 +5,6 @@ from django.contrib.auth.models import User
 class Person(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     isSecurity = models.BooleanField()
+
+    def __str__(self):
+        return str(self.user.username)
