@@ -6,7 +6,6 @@ from .models import Person
 from django.http import HttpResponse
 from django.urls import reverse
 
-# Create your views here.
 
 class Home(View):
 
@@ -23,10 +22,12 @@ class Home(View):
         if u is not None:
             login(request, u)
             p = Person.objects.get(user = u)
-            if p.isSecurity:
-                return render(request, 'website/security.html')
-            else:
+            if p.designation == 1: # 1: Employee, 2: Security, 3: Admin
                 return render(request, 'website/employee.html')
+            elif p.designation == 2:
+                return render(request, 'website/security.html')
+            elif p.designation == 3:
+                return render(request, 'website/admin.html')
         else:
             return HttpResponse('Fail')
 
