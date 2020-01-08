@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .models import Person
 from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.db.utils import IntegrityError
 
 class Home(View):
@@ -65,16 +65,17 @@ class SignUp(View):
             user.save()
             p.user = user
             p.designation = request.POST['designation']
-            print(p.designation)
-            if(p.designation == 3):
-                p.create_myuser();
+            if int(p.designation) == 3:
+                user.is_superuser = True
+                user.save()
+               # User.objects.filter(username = request.user.username).update(is_superuser = True)
             p.save()
 
         except IntegrityError:
             err = {'error', 'Username already exists!'}
             return render(request, self.template_name, err)
 
-        return HttpResponseRedirect(reverse('Home'))
+        return render(request, 'website/home.html')
 
 def Logout(request):
     logout(request)
