@@ -1,1 +1,12 @@
-sign up page for users
+<form method="post" action="{% url 'website:Home' %}">
+    {% csrf_token %}
+    Name: <input type="text" name="name"> <br>
+    Username: <input type="text" name="username"> <br>
+    Password: <input type="text" name="password"> <br>
+    <select class="dropbtn" required name="designation">Select
+    <option value="Employee" value="1">Employee</option>
+    <option value="Security" value="2">Security</option>
+        <option value="Admin" value="3">Admin</option>
+   </select>
+    <input type="submit" value="Submit">
+</form>
