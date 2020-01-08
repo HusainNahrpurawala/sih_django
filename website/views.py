@@ -52,15 +52,12 @@ class SignUp(View):
     template_name = 'website/signup.html'
 
     def get(self, request):
-        #if request.user.is_authenticated:
-           # return HttpResponseRedirect(reverse('Security'))
-        #else:
         return render(request, self.template_name)
 
     def post(self, request):
         try:
-            p = Person.objects.filter(user = u).first()
-            #p = Person()
+            #p = Person.objects.filter(user = u).first()
+            p = Person()
             user = User()
             user.username = request.POST['username']
             user.set_password(request.POST['password'])
@@ -68,9 +65,9 @@ class SignUp(View):
             user.save()
             p.user = user
             p.designation = request.POST['designation']
-
+            print(p.designation)
             if(p.designation == 3):
-                p.create_myuser()
+                p.create_myuser();
             p.save()
 
         except IntegrityError:
