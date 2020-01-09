@@ -7,6 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.db.utils import IntegrityError
 import os
+from .__init__ import path
 from .CreateEnc import encode
 
 
@@ -26,7 +27,7 @@ class Home(View):
             login(request, u)
             p = Person.objects.filter(user = u).first()
             if p.designation == 1: # 1: Employee, 2: Security, 3: Admin
-                return render(request, 'website/employee.html')
+                return render(request, 'website/employee.html', {'p':p})
             elif p.designation == 2:
                 return render(request, 'website/security.html')
             elif p.designation == 3:

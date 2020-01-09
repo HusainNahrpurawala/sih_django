@@ -1,1 +1,8 @@
 Employee Page
+<br>
+<img src="{{p.photo.url}}" height="150px" width="150px">
+
+<form method="get" action="{% url 'website:Logout' %}">
+    {% csrf_token %}
+    <input type="submit" value="Logout">
+</form>

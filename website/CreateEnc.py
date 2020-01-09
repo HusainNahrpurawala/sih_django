@@ -7,11 +7,13 @@ path = path + 'website/'
 
 def encode(name, isGuest):   # USE TRY AND EXCEPT PROPERLY AS SOME IMAGES ARE NOT ENCODABLE
     file = 'encodings.csv'
-    if isGuest: file = 'guest' + file
+    if isGuest:
+        file = 'guest' + file
+        name = 'g' + name
 
     csv = pd.read_csv(path + file)
     csv = csv.drop(columns=['Unnamed: 0'])
-    image = face_recognition.load_image_file(path + 'photos/'+'g'+name+'.jpg')
+    image = face_recognition.load_image_file(path + 'photos/'+name+'.jpg')
     enc = face_recognition.face_encodings(image)[0]
 
     row = [name]
