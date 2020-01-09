@@ -1,1 +1,9 @@
-Admin
+Admin Page
+<form method="get" action="{% url 'website:SignUp' %}">
+    {% csrf_token %}
+    <input type="submit" value="Sign Up">
+</form>
+<form method="get" action="{% url 'website:Logout' %}">
+    {% csrf_token %}
+    <input type="submit" value="Logout">
+</form>

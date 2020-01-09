@@ -27,7 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+"""MEDIA_URL = '/website/photos/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'website/photos')
+"""
 # Application definition
 
 INSTALLED_APPS = [

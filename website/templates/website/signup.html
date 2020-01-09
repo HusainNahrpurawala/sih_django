@@ -1,4 +1,4 @@
-<form method="post">
+<form method="post" action="{% url 'website:SignUp' %}">
     {% csrf_token %}
     Name: <input type="text" name="name"> <br>
     Username: <input type="text" name="username"> <br>
@@ -7,6 +7,7 @@
     <option value="1">Employee</option>
     <option value="2">Security</option>
         <option value="3">Admin</option>
-   </select>
+    </select>
+    <input type="file" name="photo"><br>
     <input type="submit" value="Submit">
 </form>

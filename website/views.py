@@ -6,6 +6,10 @@ from .models import Person
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.db.utils import IntegrityError
+import os
+from .__init__ import path
+
+photo_path = path + 'website/photos/'
 
 class Home(View):
 
@@ -31,32 +35,17 @@ class Home(View):
         else:
             return HttpResponse('Fail')
 
-class Security(View):
-
-    template_name = 'website/security.html'
-
-    def get(self, request):
-        u = request.user
-        if u.is_authenticated:
-            p = Person.objects.get(user = u)
-            g = Guest()
-            #if p.isSecurity:
-            return render(request, self.template_name)
-            #else:
-            return HttpResponse('Fail')
-        else:
-            return redirect(reverse('home'))
-
 class SignUp(View):
     
     template_name = 'website/signup.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        if request.user.is_authenticated:
+            return render(request, self.template_name)
+        else: return render(request, "website/home.html")
 
     def post(self, request):
         try:
-            #p = Person.objects.filter(user = u).first()
             p = Person()
             user = User()
             user.username = request.POST['username']
@@ -65,12 +54,13 @@ class SignUp(View):
             user.save()
             p.user = user
             p.designation = request.POST['designation']
+
             if int(p.designation) == 3:
+                user.is_staff = True
+                user.is_admin = True
                 user.is_superuser = True
                 user.save()
-               # User.objects.filter(username = request.user.username).update(is_superuser = True)
             p.save()
-
         except IntegrityError:
             err = {'error', 'Username already exists!'}
             return render(request, self.template_name, err)
@@ -79,4 +69,4 @@ class SignUp(View):
 
 def Logout(request):
     logout(request)
-    return redirect(reverse('home'))
+    return redirect('website:Home')

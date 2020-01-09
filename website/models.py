@@ -10,10 +10,4 @@ class Person(models.Model):
     def __str__(self):
         return str(self.user.username)
 
-    def create_myuser(self, *args, **kwargs):
-        try:
-            super(Person, self).save()  # Call default save method
-        except:
-            print("Exception occurred:")
-
 
