@@ -1,1 +1,9 @@
 Security Page
+<form method="get" action="{% url 'website:Guest' %}">
+    {% csrf_token %}
+    <input type="submit" value="Add Guest">
+</form>
+<form method="get" action="{% url 'website:Logout' %}">
+    {% csrf_token %}
+    <input type="submit" value="Logout">
+</form>
