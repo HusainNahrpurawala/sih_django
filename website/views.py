@@ -7,9 +7,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.db.utils import IntegrityError
 import os
-from .__init__ import path
+from .CreateEnc import encode
 
-photo_path = path + 'website/photos/'
 
 class Home(View):
 
@@ -54,13 +53,16 @@ class SignUp(View):
             user.save()
             p.user = user
             p.designation = request.POST['designation']
-
+            p.photo = request.FILES['photo']
+            ext = p.photo.name.split('.')[-1]
+            p.photo.name = str(user.pk) + '.' + ext
             if int(p.designation) == 3:
                 user.is_staff = True
                 user.is_admin = True
                 user.is_superuser = True
                 user.save()
             p.save()
+            encode(str(user.pk))
         except IntegrityError:
             err = {'error', 'Username already exists!'}
             return render(request, self.template_name, err)
