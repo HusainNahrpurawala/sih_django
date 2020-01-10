@@ -9,6 +9,7 @@ from django.db.utils import IntegrityError
 import os
 from .__init__ import path
 from .CreateEnc import encode
+import csv
 
 
 class Home(View):
@@ -64,6 +65,13 @@ class SignUp(View):
                 user.save()
             p.save()
             encode(str(user.pk), False)
+
+            # Creating Default Log file for User just added
+            csvfile = open(path + 'website/Logs/' + str(user.pk) + '.csv', 'w')
+            writer = csv.writer(csvfile, delimiter=',')
+            writer.writerow(['Unnamed: 0', 'DATE', 'TIME', 'ENTRY/EXIT'])
+            csvfile.close()
+
         except IntegrityError:
             err = {'error', 'Username already exists!'}
             return render(request, self.template_name, err)

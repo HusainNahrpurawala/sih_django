@@ -14,10 +14,19 @@ def encode(name, isGuest):   # USE TRY AND EXCEPT PROPERLY AS SOME IMAGES ARE NO
     csv = pd.read_csv(path + file)
     csv = csv.drop(columns=['Unnamed: 0'])
     image = face_recognition.load_image_file(path + 'photos/'+name+'.jpg')
-    enc = face_recognition.face_encodings(image)[0]
+    try:
+        enc = face_recognition.face_encodings(image)
+        row = [name]
 
-    row = [name]
-    for i in enc:
-        row.append(i)
-    csv.loc[csv.shape[0]+1] = row
-    csv.to_csv(path + file)
+        if len(enc)==0:
+            return 100
+        if len(enc)!=1:
+            return 101
+
+        for i in enc[0]:
+            row.append(i)
+        csv.loc[csv.shape[0]+1] = row
+        csv.to_csv(path + file)
+        return 1
+    except:
+        return 100

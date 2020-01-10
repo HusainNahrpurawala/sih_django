@@ -4,6 +4,7 @@ import cv2
 import multiprocessing
 import numpy as np
 import statistics
+from CreateLogs import CreateLogs
 
 # SHARED MULTIPROCESSING VARIABLE
 face_names = multiprocessing.Manager().Queue(20)
@@ -15,11 +16,11 @@ def getEnc():
     names = []
 
     for i in range(csv.shape[0]):
-        # print(i)
+        print(i)
         innerlist = []
         for j in range(128):
             innerlist.append(csv.iloc[i][str(j + 1)])
-        names.append(str(csv.iloc[i]['name']))
+        names.append(str(csv.iloc[i]['pk']))
         encodings.append(innerlist)
     return (names, encodings)
 
@@ -83,6 +84,7 @@ def FaceRec():
                 temp.append(face_names.get())
             print("ATTENDANCE UPDATED")
             attend.append(statistics.mode(temp))
+            break
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -90,7 +92,7 @@ def FaceRec():
     videoCapture.release()
     cv2.destroyAllWindows()
 
-    return attend
+    return int(attend[0].split('.')[0])
 
+CreateLogs(FaceRec())
 
-print(FaceRec())
