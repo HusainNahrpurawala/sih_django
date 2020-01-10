@@ -8,6 +8,8 @@ path = path + 'Logs/'
 
 
 def CreateLogs(name):
+    if name == -1:
+        return 0    # UNKNOWN
     name = str(name)
     date = datetime.date.today()    # DATE OF ENTRY
     time = datetime.datetime.now()  # TIME OF ENTRY
@@ -31,5 +33,5 @@ def CreateLogs(name):
         filewriter.writerow(['Unnamed: 0', 'DATE', 'TIME', 'ENTRY/EXIT'])
         filewriter.writerow([0, date.strftime("%d/%m/%y"), time.strftime("%H:%M:%S"), 'ENTRY'])
         csvfile.close()
-    print('LOGGED')
+    return 1
 

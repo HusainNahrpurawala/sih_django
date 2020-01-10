@@ -10,6 +10,7 @@ import os
 from .__init__ import path
 from .CreateEnc import encode
 import csv
+import pandas as pd
 
 
 class Home(View):
@@ -28,7 +29,9 @@ class Home(View):
             login(request, u)
             p = Person.objects.filter(user = u).first()
             if p.designation == 1: # 1: Employee, 2: Security, 3: Admin
-                return render(request, 'website/employee.html', {'p':p})
+                csvfile = pd.read_csv(path+'website/Logs/'+str(p.user.pk)+'.csv')
+                csvHtml = csvfile.to_html()
+                return render(request, 'website/employee.html', {'p':p,'csv':csvHtml})
             elif p.designation == 2:
                 return render(request, 'website/security.html')
             elif p.designation == 3:

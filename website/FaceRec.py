@@ -30,12 +30,13 @@ def getEnc():
 
 # METHOD TO BE MULTIPROCESSED
 def CompareFace(FaceWebCam, face_names):
-    matches = face_recognition.compare_faces(encodings, FaceWebCam)
+    matches = face_recognition.compare_faces(encodings, FaceWebCam,tolerance=0.6)
     name = "UNKNOWN"
 
     distance = face_recognition.face_distance(encodings, FaceWebCam)
     bestMatch = np.argmin(distance)
-    if matches[bestMatch]:
+
+    if matches[bestMatch] and distance[bestMatch] < 0.45:
         name = names[bestMatch]
     print(name)
     try:
@@ -88,11 +89,14 @@ def FaceRec():
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
+    
     videoCapture.release()
     cv2.destroyAllWindows()
 
+    if attend[0] == 'UNKNOWN':
+        return -1
+    
     return int(attend[0].split('.')[0])
 
-CreateLogs(FaceRec())
-
+a = CreateLogs(FaceRec())
+print(a)
