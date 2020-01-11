@@ -3,6 +3,10 @@ Admin Page
     {% csrf_token %}
     <input type="submit" value="Add User">
 </form>
+<form method="get" action="{% url 'website:AllLogs' %}">
+    {% csrf_token %}
+    <input type="submit" value="All Logs">
+</form>
 <form method="get" action="{% url 'website:Logout' %}">
     {% csrf_token %}
     <input type="submit" value="Logout">

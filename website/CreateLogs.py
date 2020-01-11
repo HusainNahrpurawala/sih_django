@@ -17,7 +17,11 @@ def CreateLogs(name):
     if os.path.exists(path + name + '.csv'):
         logs = pd.read_csv(path + name + '.csv')
         logs = logs.drop(columns=['Unnamed: 0'])
-        entry = logs.iloc[logs.shape[0] - 1]['ENTRY/EXIT']
+
+        if logs.shape[0] == 0 : entry = None
+        else :
+            entry = logs.iloc[logs.shape[0] - 1]['ENTRY/EXIT']
+
 
         if entry == 'ENTRY':
             enterlog = 'EXIT'

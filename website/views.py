@@ -10,6 +10,7 @@ import os
 from .__init__ import path
 from .CreateEnc import encode
 import csv
+from .TodayLogs import TodayLogs
 import pandas as pd
 
 
@@ -30,6 +31,7 @@ class Home(View):
             p = Person.objects.filter(user = u).first()
             if p.designation == 1: # 1: Employee, 2: Security, 3: Admin
                 csvfile = pd.read_csv(path+'website/Logs/'+str(p.user.pk)+'.csv')
+                csvfile = csvfile.drop(columns=['Unnamed: 0'])
                 csvHtml = csvfile.to_html()
                 return render(request, 'website/employee.html', {'p':p,'csv':csvHtml})
             elif p.designation == 2:
@@ -99,6 +101,20 @@ class GuestView(View):
         g.save()
         encode(str(g.pk), True)
         return render(request, 'website/security.html')
+
+class allLogs(View):
+    template_name = 'website/allLogs.html'
+
+    def get(self,request):
+        if request.user.is_authenticated:
+            TodayLogs()
+            csvfile = pd.read_csv(path+'website/Today.csv')
+            csvfile = csvfile.drop(columns=['Unnamed: 0'])
+            csvHtml = csvfile.to_html()
+            print(csvfile)
+            return render(request, 'website/allLogs.html', {'csv': csvHtml})
+        else:
+            return render(request, "website/home.html")
 
 def Logout(request):
     logout(request)
