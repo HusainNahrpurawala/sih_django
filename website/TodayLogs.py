@@ -24,8 +24,3 @@ def TodayLogs():
 
     Today.sort_values('TIME')   # SORT ACCORDING TO TIME // NOT SURE IF WORKS
     Today.to_csv(path +'Today.csv')
-
-
-
-
-

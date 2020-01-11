@@ -1,6 +1,6 @@
 import face_recognition
 import pandas as pd
-import cv2
+import cv2, time
 import multiprocessing
 import numpy as np
 import statistics
@@ -24,9 +24,22 @@ def getEnc():
         encodings.append(innerlist)
     return (names, encodings)
 
+def GuestEnc():
+    csv = pd.read_csv('guestencodings.csv')
+    encodings = []
+    names = []
+
+    for i in range(csv.shape[0]):
+        print(str(i))
+        innerlist = []
+        for j in range(128):
+            innerlist.append(csv.iloc[i][str(j + 1)])
+        names.append(str(csv.iloc[i]['pk']))
+        encodings.append(innerlist)
+    return (names, encodings)
 
 (names, encodings) = getEnc()  # STORE FROM CSV FILE
-
+(Gname,Gencodings) = GuestEnc()
 
 # METHOD TO BE MULTIPROCESSED
 def CompareFace(FaceWebCam, face_names):
@@ -38,6 +51,13 @@ def CompareFace(FaceWebCam, face_names):
 
     if matches[bestMatch] and distance[bestMatch] < 0.45:
         name = names[bestMatch]
+    if name == 'UNKNOWN':
+        matchG = face_recognition.compare_faces(Gencodings,FaceWebCam,tolerance=0.6)
+        distG = face_recognition.face_distance(Gencodings,FaceWebCam)
+        bestMatchG = np.argmin(distG)
+
+        if matchG[bestMatchG] and distG[bestMatchG] < 0.45:
+            name = Gname[bestMatchG]
     print(name)
     try:
         face_names.put(name)
@@ -83,7 +103,7 @@ def FaceRec():
                 p.join()
             for x in range(face_names.qsize()):
                 temp.append(face_names.get())
-            print("ATTENDANCE UPDATED")
+
             attend.append(statistics.mode(temp))
             break
 
@@ -93,10 +113,15 @@ def FaceRec():
     videoCapture.release()
     cv2.destroyAllWindows()
 
-    if attend[0] == 'UNKNOWN':
-        return -1
-    
-    return int(attend[0].split('.')[0])
+    try:
+        if attend[0] == 'UNKNOWN':
+            for i in range(10):
+                print('\a')
+                time.sleep(0.1)
+            return -1
+    except:
+        print("FACEREC INTERUPT")
+        return -2
+    return str(attend[0].split('.')[0])
 
-a = CreateLogs(FaceRec())
-print(a)
+
