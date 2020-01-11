@@ -17,7 +17,7 @@ def Recognize():
             time.sleep(2)
 
     except KeyboardInterrupt:
-        print("INTERUPT")
+        print("INTERRUPT")
 
 
 Recognize()

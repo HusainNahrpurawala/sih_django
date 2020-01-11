@@ -12,6 +12,8 @@ from .CreateEnc import encode
 import csv
 from .TodayLogs import TodayLogs
 import pandas as pd
+from django.urls import reverse
+from django.contrib import messages
 
 
 class Home(View):
@@ -19,6 +21,17 @@ class Home(View):
     template_name = 'website/home.html'
 
     def get(self, request):
+        if request.user.is_authenticated: 
+            p = Person.objects.get(user = request.user)
+            if p.designation == 1: # 1: Employee, 2: Security, 3: Admin
+                csvfile = pd.read_csv(path+'website/Logs/'+str(p.user.pk)+'.csv')
+                csvfile = csvfile.drop(columns=['Unnamed: 0'])
+                csvHtml = csvfile.to_html()
+                return render(request, 'website/employee.html', {'p':p,'csv':csvHtml})
+            elif p.designation == 2:
+                return render(request, 'website/security.html')
+            elif p.designation == 3:
+                return render(request, 'website/admin.html')
         return render(request, self.template_name)
 
     def post(self, request):
@@ -39,7 +52,8 @@ class Home(View):
             elif p.designation == 3:
                 return render(request, 'website/admin.html')
         else:
-            return HttpResponse('Fail')
+            messages.error(request, 'Invalid Login Credentials!')
+            return render(request, 'website/home.html')
 
 class SignUp(View):
     
@@ -70,12 +84,6 @@ class SignUp(View):
                 user.save()
             p.save()
             encode(str(user.pk), False)
-
-            # Creating Default Log file for User just added
-            csvfile = open(path + 'website/Logs/' + str(user.pk) + '.csv', 'w')
-            writer = csv.writer(csvfile, delimiter=',')
-            writer.writerow(['Unnamed: 0', 'DATE', 'TIME', 'ENTRY/EXIT'])
-            csvfile.close()
 
         except IntegrityError:
             err = {'error', 'Username already exists!'}

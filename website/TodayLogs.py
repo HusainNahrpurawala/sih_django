@@ -10,7 +10,7 @@ path = path + 'website/'
 
 def TodayLogs():
     Date = datetime.date.today().strftime("%d/%m/%y")   # TODAYS DATE
-
+    print(type(Date))
     Today = pd.DataFrame(columns=['ID','NAME','DATE','TIME','ENTRY/EXIT'])     # NEW DATAFRAME FOR TODAYS LOGS
 
     for p in os.listdir(path+'Logs/'):  # ALL CSVS IN FILE
@@ -29,6 +29,7 @@ def TodayLogs():
             for index in range(csv.shape[0]):
                 if csv.iloc[index]['DATE'] ==Date:  # FOR EACH ENTRY WHERE DATE IS EQUAL TO TODAYS DATE
                     pk = int(p.split('.')[0])
+                    print(pk)
                     name = User.objects.get(pk=pk).first_name
                     Today.loc[Today.shape[0]-1] = [pk,name,csv.iloc[index]['DATE'],csv.iloc[index]['TIME'],csv.iloc[index]['ENTRY/EXIT']]
 
